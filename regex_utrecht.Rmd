@@ -151,6 +151,11 @@ str_extract(example, pattern)
 ---
 # In practice
 
+Our example:
+```{r echo=F}
+example
+```
+
 What if I don't know what fruit I ate?
 
 ```{r}
@@ -164,10 +169,13 @@ str_extract(example, pattern)
 ---
 # In practice
 
-How do I find out how many fruits I ate?
+Our example:
+```{r echo=F}
+example
+```
 
-Let's look for a digit. We can use `\\d`:
-```{r}
+How do I find out how many fruits I ate? Let's look for a digit. We can use `\\d`:
+```r
 str_extract(example, "\\d")
 ```
 
@@ -192,6 +200,11 @@ str_extract(example, "\\d+")
 The + is used to denote *one or more* of the previous character.
 ---
 # In practice
+
+Our example:
+```{r echo=F}
+example
+```
 
 Let's extract both the quantity and the fruit (or whatever object I counted)
 
@@ -255,7 +268,7 @@ knitr::include_graphics("regex_utrecht_files/figure-html/stringr_metachars.png")
 names <- read.csv("regex_utrecht_files/fictionalnames.csv")
 names <- names$Name
 ```
-I have a vector of names (generated with [listofrandomnames.com](http://www.listofrandomnames.com/index.cfm?textarea)).
+I have a vector of names called `names` (generated with [listofrandomnames.com](http://www.listofrandomnames.com/index.cfm?textarea)).
 
 I want to select names that start with a C, then a vowel:
 ```{r}
@@ -287,12 +300,16 @@ pattern <- "^C"
 grep(pattern, names, value = T)
 ```
 
+-- 
+
+** Question: why is this `"^C"` different from the previous example `"C[^aeiou]"` **
+
 --
 
-Or where both names start with a C:
+We can combine them:
 
 ```{r}
-pattern <- "^C.+C"
+pattern <- "^[^C]"
 
 grep(pattern, names, value = T)
 ```
@@ -335,7 +352,7 @@ These are screenshots from the much-recommended [stringr cheatsheet](https://git
   
   - Use detection in an if-statement, and e.g. search for further information
   ```{r}
-  str_detect(names, pattern) %>% head()
+  str_detect(names, pattern)
   ```  
 
 ---
@@ -343,13 +360,13 @@ These are screenshots from the much-recommended [stringr cheatsheet](https://git
 
 - My personal use:
 
-  - Find a DOI in a pdf, and use it to find reference information for my database
+  - Find a DOI in a pdf, and use it to find citation information for my reference database
   
   - Look for a specific amino acid pattern in a protein sequence
 
 --
 
-How about you?
+- How about you?
 
 ---
 # A note of caution

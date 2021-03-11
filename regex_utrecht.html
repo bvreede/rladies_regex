@@ -160,6 +160,12 @@ str_extract(example, pattern)
 ---
 # In practice
 
+Our example:
+
+```
+## [1] "This afternoon, I ate 24 apples. Now I have a stomach ache."
+```
+
 What if I don't know what fruit I ate?
 
 
@@ -178,16 +184,15 @@ str_extract(example, pattern)
 ---
 # In practice
 
-How do I find out how many fruits I ate?
+Our example:
 
-Let's look for a digit. We can use `\\d`:
+```
+## [1] "This afternoon, I ate 24 apples. Now I have a stomach ache."
+```
 
+How do I find out how many fruits I ate? Let's look for a digit. We can use `\\d`:
 ```r
 str_extract(example, "\\d")
-```
-
-```
-## [1] "2"
 ```
 
 --
@@ -221,6 +226,12 @@ str_extract(example, "\\d+")
 The + is used to denote *one or more* of the previous character.
 ---
 # In practice
+
+Our example:
+
+```
+## [1] "This afternoon, I ate 24 apples. Now I have a stomach ache."
+```
 
 Let's extract both the quantity and the fruit (or whatever object I counted)
 
@@ -294,7 +305,7 @@ From the [stringr cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/
 # In practice
 
 
-I have a vector of names (generated with [listofrandomnames.com](http://www.listofrandomnames.com/index.cfm?textarea)).
+I have a vector of names called `names` (generated with [listofrandomnames.com](http://www.listofrandomnames.com/index.cfm?textarea)).
 
 I want to select names that start with a C, then a vowel:
 
@@ -305,7 +316,8 @@ grep(pattern, names, value = T)
 ```
 
 ```
-## [1] "Conrad Oles"       "Cinderella Seiler" "Bianca Cayetano"   "Shara Cedeno"      "Cheri Callan"
+## [1] "Conrad Oles"       "Cinderella Seiler" "Bianca Cayetano"  
+## [4] "Shara Cedeno"      "Cheri Callan"
 ```
 
 --
@@ -319,7 +331,8 @@ grep(pattern, names, value = T)
 ```
 
 ```
-## [1] "Clarita Chubb"      "Clarine Fyfe"       "Adah Classen"       "Cheri Callan"       "Christene Gassaway"
+## [1] "Clarita Chubb"      "Clarine Fyfe"       "Adah Classen"      
+## [4] "Cheri Callan"       "Christene Gassaway"
 ```
 
 --
@@ -338,23 +351,41 @@ grep(pattern, names, value = T)
 ```
 
 ```
-## [1] "Clarita Chubb"      "Clarine Fyfe"       "Conrad Oles"        "Cinderella Seiler"  "Cheri Callan"      
-## [6] "Christene Gassaway"
+## [1] "Clarita Chubb"      "Clarine Fyfe"       "Conrad Oles"       
+## [4] "Cinderella Seiler"  "Cheri Callan"       "Christene Gassaway"
 ```
+
+-- 
+
+** Question: why is this `"^C"` different from the previous example `"C[^aeiou]"` **
 
 --
 
-Or where both names start with a C:
+We can combine them:
 
 
 ```r
-pattern &lt;- "^C.+C"
+pattern &lt;- "^[^C]"
 
 grep(pattern, names, value = T)
 ```
 
 ```
-## [1] "Clarita Chubb" "Cheri Callan"
+##  [1] "Everette Rager"       "Micki Guerrera"       "Sharla Khang"        
+##  [4] "Vaughn Gilroy"        "Randa Kraker"         "Adah Classen"        
+##  [7] "Jeane Richards"       "Hilma Filson"         "Lakesha Garriga"     
+## [10] "Lindy Rather"         "Lavelle Ragusa"       "Myrta Mceachern"     
+## [13] "Mellissa Becerril"    "Scottie Mcgillivray"  "Telma Walter"        
+## [16] "Kayce Eargle"         "Jaclyn Plyler"        "Elmer Sautter"       
+## [19] "Brynn Marzette"       "Kathyrn Marvin"       "Myriam Bono"         
+## [22] "Sharan Mainer"        "Dwayne Hotard"        "Thad Bibbs"          
+## [25] "Rosy Beck"            "Bianca Cayetano"      "Katy Dimuzio"        
+## [28] "Tracey Wasser"        "Tanesha Upton"        "Barbera Gloster"     
+## [31] "Denna Derrow"         "Shara Cedeno"         "Winter Kuebler"      
+## [34] "Margeret Dyal"        "Beryl Leeks"          "Sherley Goad"        
+## [37] "Larhonda Bartlebaugh" "Earleen Leatham"      "Ron Reinhard"        
+## [40] "Hoa Upshaw"           "Kathrine Voisin"      "Retta Broomfield"    
+## [43] "Kandis Billups"       "Sharron Riel"
 ```
 
 ---
@@ -388,18 +419,23 @@ These are screenshots from the much-recommended [stringr cheatsheet](https://git
   ```
   
   ```
-  ## [1] "Babcock!"       "Clarine Fyfe"   "Everette Rager" "Micki Guerrera" "Sharla Khang"   "Vaughn Gilroy"
+  ## [1] "Babcock!"       "Clarine Fyfe"   "Everette Rager" "Micki Guerrera"
+  ## [5] "Sharla Khang"   "Vaughn Gilroy"
   ```
 --
   
   - Use detection in an if-statement, and e.g. search for further information
   
   ```r
-  str_detect(names, pattern) %&gt;% head()
+  str_detect(names, pattern)
   ```
   
   ```
-  ## [1]  TRUE FALSE FALSE FALSE FALSE FALSE
+  ##  [1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+  ## [13] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+  ## [25] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+  ## [37] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+  ## [49] FALSE FALSE
   ```
 
 ---
@@ -407,13 +443,13 @@ These are screenshots from the much-recommended [stringr cheatsheet](https://git
 
 - My personal use:
 
-  - Find a DOI in a pdf, and use it to find reference information for my database
+  - Find a DOI in a pdf, and use it to find citation information for my reference database
   
   - Look for a specific amino acid pattern in a protein sequence
 
 --
 
-How about you?
+- How about you?
 
 ---
 # A note of caution
