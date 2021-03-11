@@ -22,11 +22,12 @@ regex_match <- regexpr("[^/]+$", links, perl=TRUE)
 destination <- regmatches(links, regex_match)
 
 # download the files from links and unzip
-for(i in seq_along(links)){
-  download.file(links[i], destfile=destination[i],method="libcurl")
-  Sys.sleep(runif(1, 1, 5))
-}
-lapply(destination,unzip)
+## NB: this section has been commented out, because we do not want to overload the website if everyone does this!
+# for(i in seq_along(links)){
+#   download.file(links[i], destfile=destination[i],method="libcurl")
+#   Sys.sleep(runif(1, 1, 5))
+# }
+# lapply(destination,unzip)
 
 # identify data files, read and collect the data
 ll<-list.files(pattern = "NL[0-9]{2}_[0-9]{8}\\.csv$")
