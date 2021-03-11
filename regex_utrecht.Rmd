@@ -1,0 +1,177 @@
+---
+title: "Regular Expressions"
+author: "Rladies Utrecht"
+date: "11 March 2021"
+output:
+  xaringan::moon_reader:
+    css: ["default", "rladies", "rladies-fonts"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+class: center, middle
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+# Welcome!
+
+Introduction to RegEx
+
+*Breakout: crossword*
+
+Plenary discussion
+
+*Breakout: script*
+
+Discussion & closing
+
+---
+class: inverse, center, middle
+
+# Introduction to Regular Expressions
+
+---
+
+# What are Regular Expressions?
+
+- A way to extract text based on patterns
+
+- A convention to describe such a pattern
+
+- Useful!
+
+- But tricky...
+
+
+
+---
+# For example: an email address
+
+```r
+"
+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}
+~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]
+|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-
+]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-
+5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|
+[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e
+-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])
+"
+```
+via [emailregex.com](http://emailregex.com/)
+
+---
+```{r, echo=FALSE, eval=TRUE, out.width=600}
+knitr::include_graphics("regex_utrecht_files/figure-html/regex_email.jpeg")
+```
+
+---
+# Elements of a Regular Expression
+
+What characters am I looking for?
+- character types (e.g.: capitals, digits, spaces, punctuation...)
+- specified sets of characters (e.g. only A, B, or C; anything but 8 ...)
+
+How many do I need?
+- a specified numner (e.g. exactly 4)
+- a specific range (e.g.: more than once, any number of times ...)
+
+What is their context?
+- at a line boundary (beginning, end...)
+- as a word
+
+
+---
+# For example
+
+
+
+---
+# All regex are equal
+
+No!
+
+Differences in
+- special characters
+- how characters are escaped
+
+
+---
+# Stringr
+
+
+---
+
+ Metacharacters
+Metacharacters are pre-defined sets of characters.
+. matches ANY character except the newline character \n \d matches digits 0 through 9
+\w matches alphanumeric characters and underscore
+\s matches any whitespace
+\t Tabs
+\n Newline
+ETC.
+TYPE ALONG in R:
+Txt <- "SA_1234"
+regmatches ( Txt , regexpr ("\\w", Txt )) regmatches ( Txt , gregexpr ("\\w", Txt )) regmatches ( Txt , gregexpr ("\\d" , Txt ))
+R treats backslashes as escape values for character constants. (... and so do regular expressions. Hence the need for two backslashes when supplying a character argument for a pattern. The first one isn't actually a character, but rather it makes the second one into a character.)
+
+
+ Character sets
+[AGCT] matches one character A, G, C or T.
+[\s\d] matches one whitespace character or digit
+Define a range of characters
+[A-T] matches one character between A and T. [1-7] matches one digit between 1 and 7.
+Ranges as defined by ASCII or Unicode tables You can combine ranges: [a-cA-C]
+Sets of characters
+TYPE ALONG in R:
+regmatches(d , gregexpr("[A-Z]", Txt))
+
+
+ Position of the pattern
+We can say a regex has to be at the start or the end of the string, or at word boundaries, with more special characters.
+^ beginning of line $ endofline
+\b word boundary
+Examples: ^Hallo$ \bHallo\b
+TYPE ALONG in R:
+regmatches(d , gregexpr("^[A-Z]", Txt))
+
+
+ How to define repetitions
+Three digits: \d\d\d. How about matching thirty or a thousand digits?
+Fortunately, regular expressions let us express this very succinctly.
+\* means 0 or more times \+ means 1 or more times
+? means 0 or 1 times
+{n} means n times exactly {m,} means m or more times {m,n} means m–n times
+Example: .* matches anything Example: [a-c]{3} matches ’abc’ etc
+TYPE ALONG in R:
+regmatches(d , gregexpr("[A-Z]{2}", Txt)) regmatches(d , gregexpr("[0-9]{3}", Txt))
+
+
+ Specifying alternatives
+Sometimes you want to say match this OR that. You can do that with the | operator. Alex|Bill|Conrad matches any of these three names.
+Sometimes there can be confusion about what | refers to. In such cases, put brackets around the alternatives.
+Jim and (Alex|Bill|Conrad) matches ’Jim and Alex’, ’Jim and Bill’, etc
+
+ Defining complements of a set
+Sometimes it’s easier to define a set of characters as “everything other than X”. \S – all non-whitespace characters
+\W – all non-alphanumeric characters (also excludes underscore)
+\D – all non-numeric characters
+[^A-D] – all characters other than A, B, C, D
+
+ Doing stuff with regular expressions
+For instance:
+Capture the matches and do stuff with them Replace the match with something else
+Split a string whenever you match the regex
+
+
+---
+```{r, echo=FALSE, eval=TRUE, out.width=600}
+knitr::include_graphics("regex_utrecht_files/figure-html/regular_expressions_xkcd.png")
+```
+Source: [xkcd](https://xkcd.com/208/)
+

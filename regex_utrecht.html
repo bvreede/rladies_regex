@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Regular Expressions</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Rladies Utrecht" />
+    <meta name="date" content="2021-03-11" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies.css" rel="stylesheet" />
+    <link href="libs/remark-css/rladies-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Regular Expressions
+### Rladies Utrecht
+### 11 March 2021
+
+---
+
+class: center, middle
+
+
+
+
+# Welcome!
+
+Introduction to RegEx
+
+*Breakout: crossword*
+
+Plenary discussion
+
+*Breakout: script*
+
+Discussion &amp; closing
+
+---
+class: inverse, center, middle
+
+# Introduction to Regular Expressions
+
+---
+
+# What are Regular Expressions?
+
+- A way to extract text based on patterns
+
+- A convention to describe such a pattern
+
+- Useful!
+
+- But tricky...
+
+
+
+---
+# For example: an email address
+
+```r
+"
+(?:[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;'*+/=?^_`{|}
+~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]
+|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-
+]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-
+5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|
+[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e
+-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])
+"
+```
+via [emailregex.com](http://emailregex.com/)
+
+---
+&lt;img src="regex_utrecht_files/figure-html/regex_email.jpeg" width="600" /&gt;
+
+---
+# Elements of a Regular Expression
+
+What characters am I looking for?
+- character types (e.g.: capitals, digits, spaces, punctuation...)
+- specified sets of characters (e.g. only A, B, or C; anything but 8 ...)
+
+How many do I need?
+- a specified numner (e.g. exactly 4)
+- a specific range (e.g.: more than once, any number of times ...)
+
+What is their context?
+- at a line boundary (beginning, end...)
+- as a word
+
+
+---
+# For example
+
+
+
+---
+# All regex are equal
+
+No!
+
+Differences in
+- special characters
+- how characters are escaped
+
+
+---
+# Stringr
+
+
+---
+
+ Metacharacters
+Metacharacters are pre-defined sets of characters.
+. matches ANY character except the newline character \n \d matches digits 0 through 9
+\w matches alphanumeric characters and underscore
+\s matches any whitespace
+\t Tabs
+\n Newline
+ETC.
+TYPE ALONG in R:
+Txt &lt;- "SA_1234"
+regmatches ( Txt , regexpr ("\\w", Txt )) regmatches ( Txt , gregexpr ("\\w", Txt )) regmatches ( Txt , gregexpr ("\\d" , Txt ))
+R treats backslashes as escape values for character constants. (... and so do regular expressions. Hence the need for two backslashes when supplying a character argument for a pattern. The first one isn't actually a character, but rather it makes the second one into a character.)
+
+
+ Character sets
+[AGCT] matches one character A, G, C or T.
+[\s\d] matches one whitespace character or digit
+Define a range of characters
+[A-T] matches one character between A and T. [1-7] matches one digit between 1 and 7.
+Ranges as defined by ASCII or Unicode tables You can combine ranges: [a-cA-C]
+Sets of characters
+TYPE ALONG in R:
+regmatches(d , gregexpr("[A-Z]", Txt))
+
+
+ Position of the pattern
+We can say a regex has to be at the start or the end of the string, or at word boundaries, with more special characters.
+^ beginning of line $ endofline
+\b word boundary
+Examples: ^Hallo$ \bHallo\b
+TYPE ALONG in R:
+regmatches(d , gregexpr("^[A-Z]", Txt))
+
+
+ How to define repetitions
+Three digits: \d\d\d. How about matching thirty or a thousand digits?
+Fortunately, regular expressions let us express this very succinctly.
+\* means 0 or more times \+ means 1 or more times
+? means 0 or 1 times
+{n} means n times exactly {m,} means m or more times {m,n} means m–n times
+Example: .* matches anything Example: [a-c]{3} matches ’abc’ etc
+TYPE ALONG in R:
+regmatches(d , gregexpr("[A-Z]{2}", Txt)) regmatches(d , gregexpr("[0-9]{3}", Txt))
+
+
+ Specifying alternatives
+Sometimes you want to say match this OR that. You can do that with the | operator. Alex|Bill|Conrad matches any of these three names.
+Sometimes there can be confusion about what | refers to. In such cases, put brackets around the alternatives.
+Jim and (Alex|Bill|Conrad) matches ’Jim and Alex’, ’Jim and Bill’, etc
+
+ Defining complements of a set
+Sometimes it’s easier to define a set of characters as “everything other than X”. \S – all non-whitespace characters
+\W – all non-alphanumeric characters (also excludes underscore)
+\D – all non-numeric characters
+[^A-D] – all characters other than A, B, C, D
+
+ Doing stuff with regular expressions
+For instance:
+Capture the matches and do stuff with them Replace the match with something else
+Split a string whenever you match the regex
+
+
+---
+&lt;img src="regex_utrecht_files/figure-html/regular_expressions_xkcd.png" width="600" /&gt;
+Source: [xkcd](https://xkcd.com/208/)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
